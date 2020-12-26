@@ -10,3 +10,6 @@ Plumpa.vcxproj.filters
 Plumpa.vcxproj.user
 .vs/
 Debug/
+
+## Matlab Script Autosave files
+*.asv
