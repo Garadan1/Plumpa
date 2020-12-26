@@ -1,7 +1,7 @@
 ## Tells Git to automatically ignore the following types of files
 
-## All .txt files
-*.txt
+## Chat history
+chat.txt
 
 ## VS Project files
 Plumpa.sln
