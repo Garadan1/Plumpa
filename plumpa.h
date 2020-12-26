@@ -163,17 +163,22 @@ class Plumpa {
 
 		// +1 because 1-indexed
 		std::vector<int> day(32, 0), month(13, 0), year(23, 0);
+		// Not +1, 0-indexed
+		std::vector<int> hour(24, 0), minute(60, 0), second(60, 0);
 
 		for (size_t i = 0; i < messages.size(); ++i) {
 			++day[messages[i].time.tm_mday];
 			++month[messages[i].time.tm_mon];
 			++year[messages[i].time.tm_year];
+			++hour[messages[i].time.tm_hour];
+			++minute[messages[i].time.tm_min];
+			++second[messages[i].time.tm_sec];
 		}
 
 		// Print days, should be even distribution
 		int dyTotal = 0;
 		std::cout << "Number of messages in:\n";
-		std::cout << "\nDay of month: \n";
+		std::cout << "\nDay of month:\n";
 		for (size_t i = 1; i < day.size(); ++i)
 			std::cout << i << "\t"; // One indexed!
 		std::cout << "\n";
@@ -184,7 +189,7 @@ class Plumpa {
 		
 		// Print months, should be even distribution
 		int mnTotal = 0;
-		std::cout << "\n\nMonth of year: \n";
+		std::cout << "\n\nMonth of year:\n";
 		for (size_t i = 1; i < month.size(); ++i)
 			std::cout << i << "\t"; // One indexed!
 		std::cout << "\n";
@@ -195,7 +200,7 @@ class Plumpa {
 
 		// Print years, should only see values in 17-22
 		int yrTotal = 0;
-		std::cout << "\n\nYear (from 2000): \n";
+		std::cout << "\n\nYear (from 2000):\n";
 		for (size_t i = 1; i < year.size(); ++i)
 			std::cout << i << "\t"; // One indexed!
 		std::cout << "\n";
@@ -203,6 +208,56 @@ class Plumpa {
 			std::cout << year[i] << "\t";
 			yrTotal += year[i];
 		}
+
+		// Print hours, should see more during the day
+		int hrTotal = 0;
+		std::cout << "\n\n\nHour:\n";
+		for (size_t i = 0; i < hour.size(); ++i)
+			std::cout << i << "\t";
+		std::cout << "\n";
+		for (size_t i = 0; i < hour.size(); ++i) {
+			std::cout << hour[i] << "\t";
+			hrTotal += hour[i];
+		}
+
+		// Print minutes, should see even distribution
+		int minTotal = 0;
+		std::cout << "\n\nMinute:\n";
+		for (size_t i = 0; i < 30; ++i)
+			std::cout << i << "\t";
+		std::cout << "\n";
+		for (size_t i = 0; i < 30; ++i) {
+			std::cout << minute[i] << "\t";
+			minTotal += minute[i];
+		}
+		std::cout << "\n\n";
+		for (size_t i = 30; i < 60; ++i)
+			std::cout << i << "\t";
+		std::cout << "\n";
+		for (size_t i = 30; i < 60; ++i) {
+			std::cout << minute[i] << "\t";
+			minTotal += minute[i];
+		}
+
+		// Print seconds, should see totally even distribution
+		int secTotal = 0;
+		std::cout << "\n\nSecond:\n";
+		for (size_t i = 0; i < 30; ++i)
+			std::cout << i << "\t";
+		std::cout << "\n";
+		for (size_t i = 0; i < 30; ++i) {
+			std::cout << second[i] << "\t";
+			secTotal += second[i];
+		}
+		std::cout << "\n\n";
+		for (size_t i = 30; i < 60; ++i)
+			std::cout << i << "\t";
+		std::cout << "\n";
+		for (size_t i = 30; i < 60; ++i) {
+			std::cout << second[i] << "\t";
+			secTotal += second[i];
+		}
+
 
 		std::cout << "\n\nTotal number of non-messages: " << nonMessages << "\n";
 		std::cout << "Total number of messages: " << totalMessages << "\n";
@@ -212,6 +267,9 @@ class Plumpa {
 		std::cout << "Day total: " << dyTotal << "\n";
 		std::cout << "Month total: " << mnTotal << "\n";
 		std::cout << "Year total: " << yrTotal << "\n";
+		std::cout << "Hour total: " << hrTotal << "\n";
+		std::cout << "Minute total: " << minTotal << "\n";
+		std::cout << "Second total: " << secTotal << "\n";
 	}
 
 public:
