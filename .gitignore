@@ -1,0 +1,11 @@
+## Tells Git to automatically ignore the following types of files
+
+## All .txt files
+*.txt
+
+## VS Project files
+Plumpa.sln
+Plumpa.vcxproj
+Plumpa.vcxproj.filters
+Plumpa.vcxproj.user
+.vs/
