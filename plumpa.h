@@ -36,6 +36,8 @@ class Plumpa {
 			if (raw[0] == '[' && isdigit(raw[1])) {
 				Message temp;
 
+				// Month/Day/Year
+
 				// Combine these lines once data is formatted properly (safe)
 				// This has to be int because of ctime, kinda stupid imo
 				int month = stoi(raw.substr(1, raw.find_first_of('/')));
@@ -43,7 +45,7 @@ class Plumpa {
 				#ifdef DEBUG
 				if (month < 1 || month > 12) {
 					std::cerr << "Invalid month " << month
-						<< " from(raw) message: \n" << raw << "\n";
+						<< " from (raw) message: \n" << raw << "\n";
 					exit(1);
 				}
 				#endif
@@ -58,7 +60,7 @@ class Plumpa {
 				#ifdef DEBUG
 				if (day < 1 || day > 31) {
 					std::cerr << "Invalid day " << day
-						 << " from(raw) message: \n" << raw << "\n";
+						 << " from (raw) message: \n" << raw << "\n";
 					exit(1);
 				}
 				#endif
@@ -71,10 +73,65 @@ class Plumpa {
 				#ifdef DEBUG
 				if (year < 17 || year > 22) { // Will have to change in 2023!
 					std::cerr << "Invalid year " << year
-						<< " from(raw) message: \n" << raw << "\n";
+						<< " from (raw) message: \n" << raw << "\n";
 					exit(1);
 				}
 				#endif
+
+				// Hour/Min/Sec
+
+				int hour = stoi(raw.substr(raw.find_first_of(',') + 2, raw.find_first_of(':')));
+				#ifdef DEBUG
+				if (hour < 1 || hour > 12) {
+					std::cerr << "Invalid hour " << year
+						<< " from (raw) message: \n" << raw << "\n";
+					exit(1);
+				}
+				#endif
+
+				// Trim out hour
+				raw = raw.substr(raw.find_first_of(':') + 1, raw.size());
+
+				// Since min and sec are 0 padded, this part is easier
+				int min = stoi(raw.substr(0, 2));
+				#ifdef DEBUG
+				if (min < 0 || min > 59) {
+					std::cerr << "Invalid minute " << year
+						<< " from (raw) message: \n" << raw << "\n";
+					exit(1);
+				}
+				#endif
+
+				int sec = stoi(raw.substr(3, 5));
+				#ifdef DEBUG
+				if (sec < 0 || sec > 59) {
+					std::cerr << "Invalid second " << year
+						<< " from (raw) message: \n" << raw << "\n";
+					exit(1);
+				}
+				#endif
+
+				// Trim out min, sec, trailing space
+				raw = raw.substr(6 ,raw.size());
+
+				// Convert to 24-hour time
+				// Can remove the second check once confident
+				if (raw[0] == 'P' && raw[1] == 'M') {
+					hour += 12;
+					if (hour == 24) hour = 0; // 12 AM to 0
+				}
+				else if (raw[0] == 'A' && raw[1] == 'M')
+					; // Do nothing
+				else {
+					std::cerr << "AM or PM not matched in raw message:\n" <<
+						raw << "\n";
+					exit(1);
+				}
+
+				// Trim everything up to sender name
+				raw = raw.substr(4, raw.size());
+
+				// TODO: Finish implementing - Sender (Member), message
 
 				// Assign values to time struct
 				// Note that the "year" does not follow the C++ standard
@@ -82,9 +139,10 @@ class Plumpa {
 				temp.time.tm_mday = day;
 				temp.time.tm_mon = month;
 				temp.time.tm_year = year;
-
-				// TODO: Finish implementing - Hour/Min/Sec, Sender (Member), message
-
+				temp.time.tm_sec = sec;
+				temp.time.tm_min = min;
+				temp.time.tm_hour = hour;
+				
 				messages.push_back(temp);
 				++totalMessages;
 			}
